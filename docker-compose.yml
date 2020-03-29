@@ -1,0 +1,69 @@
+version: '3'
+
+services:
+  db1:
+    container_name: sqlNode1
+    image: mcr.microsoft.com/mssql/server:2019-CU3-ubuntu-18.04
+    hostname:
+        sqlNode1
+    volumes:
+      - mssql-server-linux-datadb1:/var/opt/mssql/data/sqlNode1
+    environment:
+      MSSQL_SA_PASSWORD: "PaSSw0rd"
+      ACCEPT_EULA: "Y"
+    ports:
+      - "14331:1433"
+      - "15021:5022"
+    networks:
+      - internal
+    extra_hosts:
+      - "sqlNode2:172.18.0.3"
+      - "sqlNode3:172.18.0.2"
+
+  db2:
+    container_name: sqlNode2
+    image: mcr.microsoft.com/mssql/server:2019-CU3-ubuntu-18.04
+    hostname:
+        sqlNode2
+    volumes:
+      - mssql-server-linux-datadb2:/var/opt/mssql/data/sqlNode2
+    environment:
+      MSSQL_SA_PASSWORD: "PaSSw0rd"
+      ACCEPT_EULA: "Y"
+    ports:
+      - "14332:1433"
+      - "15022:5022"
+    networks:
+      - internal
+    extra_hosts:
+      - "sqlNode1:172.18.0.4"
+      - "sqlNode3:172.18.0.2"
+
+
+  db3:
+    container_name: sqlNode3
+    image: mcr.microsoft.com/mssql/server:2019-CU3-ubuntu-18.04
+    hostname:
+        sqlNode3
+    volumes:
+      - mssql-server-linux-datadb3:/var/opt/mssql/data/sqlNode3
+    environment:
+      MSSQL_SA_PASSWORD: "PaSSw0rd"
+      ACCEPT_EULA: "Y"
+    ports:
+      - "14333:1433"
+      - "15023:5022"
+    networks:
+      - internal
+    extra_hosts:
+      - "sqlNode2:172.18.0.3"
+      - "sqlNode1:172.18.0.4"
+
+
+volumes:
+  mssql-server-linux-datadb1:
+  mssql-server-linux-datadb2:
+  mssql-server-linux-datadb3:
+  
+networks:
+  internal:
