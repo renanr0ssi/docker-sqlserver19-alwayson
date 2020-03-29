@@ -2,8 +2,8 @@
 FROM mcr.microsoft.com/mssql/server:2019-CU3-ubuntu-18.04
 
 #Executa comandos para deixar o Linux atualizado:
-RUN sudo apt update
-RUN sudo apt upgrade -y
+RUN apt-get update
+RUN apt-get upgrade -y
 
 #informa o Mantenedor dessa imagem que criaremos (Você pode colocar seu prórpio nome):
 MAINTAINER Renan Rossi
