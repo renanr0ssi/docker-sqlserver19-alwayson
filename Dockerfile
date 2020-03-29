@@ -1,9 +1,10 @@
 #Baixar imagem de SQL Server 2019 com Ubuntu 18.04:
 FROM mcr.microsoft.com/mssql/server:2019-CU3-ubuntu-18.04
 
-#Executa comandos para deixar o Linux atualizado:
-RUN apt-get update
-RUN apt-get upgrade -y
+#Aceite dos termos do SQL Server, seta senha do user SA e utiliza a licença de Dev:
+ENV ACCEPT_EULA=Y
+ENV SA_PASSWORD="PaSSw0rd"
+ENV MSSQL_PID=Developer
 
 #informa o Mantenedor dessa imagem que criaremos (Você pode colocar seu prórpio nome):
 MAINTAINER Renan Rossi
@@ -21,11 +22,10 @@ COPY ${CERTFILE_PWD} ./certificate
 EXPOSE 1433
 EXPOSE 5022
 
+#Cria um volume para persistência de dados:
+VOLUME sqlnode1:/var/opt/mssql/data/sqlNode1
 
 
-#ENV ACCEPT_EULA=Y
-#ENV SA_PASSWORD="PaSSw0rd"
-#ENV MSSQL_PID=Developer
 
 # Set permissions (if you are using docker with windows, you don´t need to do this)
 #RUN chown mssql:mssql /usr/certificate/dbm_certificate.pvk
