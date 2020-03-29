@@ -6,6 +6,8 @@ ENV ACCEPT_EULA=Y
 ENV SA_PASSWORD="PaSSw0rd"
 ENV MSSQL_PID=Developer
 
+RUN usermod -a -G root mssql
+
 #informa o Mantenedor dessa imagem que criaremos (Você pode colocar seu prórpio nome):
 LABEL MAINTAINER="Renan Rossi"
 
@@ -29,6 +31,9 @@ VOLUME sqlnode1:/var/opt/mssql/data/sqlNode1
 ENTRYPOINT /bin/bash
 WORKDIR cd /opt/mssql-tools/bin/sqlcmd
 
+#Executar processo do SQL Server:
+CMD /opt/mssql/bin/sqlservr  
+
 # Set permissions (if you are using docker with windows, you don´t need to do this)
 #RUN chown mssql:mssql /usr/certificate/dbm_certificate.pvk
 #RUN chown mssql:mssql /usr/certificate/dbm_certificate.cer
@@ -36,7 +41,5 @@ WORKDIR cd /opt/mssql-tools/bin/sqlcmd
 # Enable availability groups
 #RUN /opt/mssql/bin/mssql-conf set hadr.hadrenabled 1
 
-# Run SQL Server process.
-#CMD /opt/mssql/bin/sqlservr  
 
-#docker run -e "ACCEPT_EULA=Y" -e "SA_PASSWORD=PaSSw0rd" -p 1433:1433 --name sql1 -d mcr.microsoft.com/mssql/server:2019-CU3-ubuntu-18.04
+
