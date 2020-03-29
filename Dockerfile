@@ -18,8 +18,8 @@ EXPOSE 1433
 EXPOSE 5022
 
 #Executa comandos para deixar o Linux atualizado:
-RUN apt update
-RUN apt upgrade -y
+RUN sudo apt update
+RUN sudo apt upgrade -y
 
 #ENV ACCEPT_EULA=Y
 #ENV SA_PASSWORD="PaSSw0rd"
