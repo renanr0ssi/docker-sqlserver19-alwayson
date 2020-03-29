@@ -7,7 +7,7 @@ ENV SA_PASSWORD="PaSSw0rd"
 ENV MSSQL_PID=Developer
 
 #informa o Mantenedor dessa imagem que criaremos (Você pode colocar seu prórpio nome):
-MAINTAINER Renan Rossi
+LABEL MAINTAINER="Renan Rossi"
 
 #Cria as Variáveis e define o local dos Certificados (Veja como criar os seus no arquivo Readme.md)
 ENV CERTFILE "certificate/dbm_certificate.cer"
@@ -25,7 +25,7 @@ EXPOSE 5022
 #Cria um volume para persistência de dados:
 VOLUME sqlnode1:/var/opt/mssql/data/sqlNode1
 
-
+ENTRYPOINT /bin/bash
 
 # Set permissions (if you are using docker with windows, you don´t need to do this)
 #RUN chown mssql:mssql /usr/certificate/dbm_certificate.pvk
