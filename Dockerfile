@@ -25,7 +25,9 @@ EXPOSE 5022
 #Cria um volume para persistência de dados:
 VOLUME sqlnode1:/var/opt/mssql/data/sqlNode1
 
+#Executando o bash após a criação do container e acessando o diretório onde ficam a ferramenta sqlcmd:
 ENTRYPOINT /bin/bash
+WORKDIR /opt/mssql-tools/bin/sqlcmd
 
 # Set permissions (if you are using docker with windows, you don´t need to do this)
 #RUN chown mssql:mssql /usr/certificate/dbm_certificate.pvk
