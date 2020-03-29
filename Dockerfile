@@ -1,6 +1,10 @@
 #Baixar imagem de SQL Server 2019 com Ubuntu 18.04:
 FROM mcr.microsoft.com/mssql/server:2019-CU3-ubuntu-18.04
 
+#Executa comandos para deixar o Linux atualizado:
+RUN sudo apt update
+RUN sudo apt upgrade -y
+
 #informa o Mantenedor dessa imagem que criaremos (Você pode colocar seu prórpio nome):
 MAINTAINER Renan Rossi
 
@@ -17,9 +21,7 @@ COPY ${CERTFILE_PWD} ./certificate
 EXPOSE 1433
 EXPOSE 5022
 
-#Executa comandos para deixar o Linux atualizado:
-RUN sudo apt update
-RUN sudo apt upgrade -y
+
 
 #ENV ACCEPT_EULA=Y
 #ENV SA_PASSWORD="PaSSw0rd"
