@@ -1,10 +1,16 @@
-# sqlserver-docker-alwayson
+# docker-sqlserver19-alwayson
 
-Docker templates to create a SQL Server 2017 availability group solution with 3 nodes
+Docker templates para criar um grupo de Alta DIsponibilidade (HA) com 03 nós de SQL Server 2019.
 
-## How to create an AlwaysOn topology with 3 nodes using docker
 
-You can create a complete environment with 3 AlwaysOn nodes by following the next steps:
+## Como criar uma topologia de  AlwaysOn com 03 nós usando Docker:
+
+Estes laboratório foi criada em cima de um servidor Linux Ubuntu 18.04 rodando Docker 19.03. 
+
+
+
+
+
 
 1. Build the infrastructure (3 nodes named: sqlNode1, sqlNode2 and sqlNode3)
 
