@@ -35,6 +35,7 @@ EXPOSE 5022
 
 # Enable availability groups
 RUN /opt/mssql/bin/mssql-conf set hadr.hadrenabled 1
+RUN systemctl restart mssql-server
 
 #Executar processo do SQL Server:
 CMD /opt/mssql/bin/sqlservr
