@@ -33,9 +33,10 @@ EXPOSE 5022
 #RUN chown mssql:mssql /usr/certificate/dbm_certificate.pvk
 #RUN chown mssql:mssql /usr/certificate/dbm_certificate.cer
 
-# Enable availability groups
+#Habilita o Grupo de Disponibilidade
 RUN /opt/mssql/bin/mssql-conf set hadr.hadrenabled 1
-RUN systemctl restart mssql-server
+#Comando que restarta o serviço do sqlserver
+#RUN systemctl restart mssql-server
 
 #Executar processo do SQL Server:
 CMD /opt/mssql/bin/sqlservr
