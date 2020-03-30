@@ -26,7 +26,7 @@ services:
     hostname:
         sqlnode2
     volumes:
-      - mssql-server-linux-datadb2:/var/opt/mssql/data/sqlNode2
+      - datadb2:/var/opt/mssql/data/sqlNode2
     environment:
       MSSQL_SA_PASSWORD: "PaSSw0rd"
       ACCEPT_EULA: "Y"
