@@ -10,12 +10,13 @@ Estes laboratório foi criada em cima de um servidor Linux Ubuntu 18.04 rodando 
 1. Faça o clone deste repositório em uma maquina Linux a qual você utilizará para subir os dockers.
 
 2. Acesse a raiz do diretório onde clonou este repositório e envie o comando abaixo.
-_OBS: Este comando irá construir a infraestrutura seguindo os parametros especificados no arquivo de docker-compose._
-_OBS: Este arquivo de docker-compose foi criado baseado na imagem gerada pelo 2017.Dockerfile._
+
 
 ```cmd
 docker-compose build
 ```
+_OBS: Este comando irá construir a infraestrutura seguindo os parametros especificados no arquivo de docker-compose._
+_OBS: Este arquivo de docker-compose foi criado baseado na imagem gerada pelo 2017.Dockerfile._
 
 3. Execute o comando abaixo para rodar a infra construida no comando anterior:
 
@@ -24,58 +25,31 @@ docker-compose up
 ```
 Agora você possui 3 nós na mesma rede preparados para fazerem parte de um novo Availability Group. 
 
-4. Conecte no nó 1 (sqlnode1)e execute o script abaixo para realizar a criação do grupo de disponibilidade:
-
-
-
-
-
-_NOTE: You can [add manually more nodes](###Add_extra_nodes_to_the_availability_group) (up to 9)_
-
-4. Connect to sqlNode2 and sqlNode3 and [join the node to the AG1](###Join_node_to_availability_group)
-
-_Now, AlwaysOn AG1 **is up and running**, waiting for new databases to be part of it :)_
-
-5. [Add databases to the availability group](###Add_databases_to_the_availability_group)
-
-### Add databases to the availability group
-
-If you have the alwayson configured, now you can add databases to the availability group by executing the following code:
-
-```sql
-ALTER AVAILABILITY GROUP [ag1] ADD DATABASE YourDatabase
-GO
-```
-
-_NOTE: Database must exist at primary node and must have a full backup_
-
-### Create availability group
-
-To create the availability group with only one node, please connect to the instance that will be node 1 and execute the following code:
+4. Conecte no nó 1 (sqlnode1) e execute o script abaixo para realizar a criação do grupo de disponibilidade:
 
 ```sql
 CREATE AVAILABILITY GROUP [AG1]
     WITH (CLUSTER_TYPE = NONE)
     FOR REPLICA ON
-    N'sqlNode1'
+    N'sqlnode1'
         WITH (
-        ENDPOINT_URL = N'tcp://sqlNode1:5022',
+        ENDPOINT_URL = N'tcp://sqlnode1:5022',
         AVAILABILITY_MODE = ASYNCHRONOUS_COMMIT,
             SEEDING_MODE = AUTOMATIC,
             FAILOVER_MODE = MANUAL,
         SECONDARY_ROLE (ALLOW_CONNECTIONS = ALL)
             ),
-    N'sqlNode2'
+    N'sqlnode2'
         WITH (
-        ENDPOINT_URL = N'tcp://sqlNode2:5022',
+        ENDPOINT_URL = N'tcp://sqlnode2:5022',
         AVAILABILITY_MODE = ASYNCHRONOUS_COMMIT,
             SEEDING_MODE = AUTOMATIC,
             FAILOVER_MODE = MANUAL,
         SECONDARY_ROLE (ALLOW_CONNECTIONS = ALL)
             ),
-    N'sqlNode3'
+    N'sqlnode3'
         WITH (
-        ENDPOINT_URL = N'tcp://sqlNode3:5022',
+        ENDPOINT_URL = N'tcp://sqlnode3:5022',
         AVAILABILITY_MODE = ASYNCHRONOUS_COMMIT,
             SEEDING_MODE = AUTOMATIC,
             FAILOVER_MODE = MANUAL,
@@ -83,11 +57,32 @@ CREATE AVAILABILITY GROUP [AG1]
             )
 ```
 
-### Add extra nodes to the availability group
+_OBS: Aconselho utilizar o Visual Studio Code para se conectar nas bases e rodar os scripts pela interface gráfica.
+_OBS: Você pdoerá adicionar mais nós (max de 9) utilizando o comando mais abaixo neste documento [add manually more nodes](###Add_extra_nodes_to_the_availability_group).
 
-More nodes (up to 9) can be added to this topology with the following code:
+5. Conectar as instâncias dos demais nós e executar o script abaixo para linká-los ao Availability Group criado no passo anterior: 
 
-1. Execute the following code against the new node you want to add
+```sql
+ALTER AVAILABILITY GROUP [ag1] JOIN WITH (CLUSTER_TYPE = NONE)
+ALTER AVAILABILITY GROUP [ag1] GRANT CREATE ANY DATABASE
+GO
+```
+
+6. Por fim, crie as bases que afrão parte do grupo de disponibilidade e execute o comando abaixo (trocar "SuaBase" pelo nome da base de dados que tiver sido criada por você):
+
+```sql
+ALTER AVAILABILITY GROUP [ag1] ADD DATABASE SuaBase
+GO
+```
+
+_OBS: Esta base deverá ser criada no nó primário e deverá ter um backup full. 
+
+
+
+### Adicionar nós extras no grupo de disponibilidade:
+
+1. Execute o script abaixo no nó o qual você queira adicionar.
+2. Copie a saida desse script e execute ele novamente no nó primário.
 
 ```sql
 DECLARE @servername AS sysname
@@ -116,24 +111,10 @@ SELECT @create_ag = REPLACE(@cmd,'<SQLInstanceName>',@servername)
 PRINT @create_ag
 ```
 
-2. Copy the output script and execute it against the primary node of your topology
 
-### Join node to availability group
+## Como criar uma imagem do zero:
 
-The last part is to join each secondary node to the availability group by executing the following command:
-
-```sql
-ALTER AVAILABILITY GROUP [ag1] JOIN WITH (CLUSTER_TYPE = NONE)
-ALTER AVAILABILITY GROUP [ag1] GRANT CREATE ANY DATABASE
-GO
-```
-_execute against the secondary node you want to add_
-
-## How to create the image from scratch
-
-The image used at https://hub.docker.com/r/enriquecatala/sql2017_alwayson_node/ has been created by following the steps:
-
-1. Connect to any SQL Server 2017 and execute this to create the certificate with private key
+1. Primeiramente, será necessário fazer a criação dos certificados que usaremos para fazer a comunicação entre os bancos. Para isso, será necessário se conectar em alguma instancia de banco do Sql Server 2017 e executar o comando abaixo (pode ser realmente qualquer uam instância, podendo ser ate mesmo um docker rodando a imagem limpa do SQL). 
 
 ```sql
 USE master
