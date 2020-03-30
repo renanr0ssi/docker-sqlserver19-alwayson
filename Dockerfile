@@ -6,8 +6,6 @@ ENV ACCEPT_EULA=Y
 ENV SA_PASSWORD="PaSSw0rd"
 ENV MSSQL_PID=Developer
 
-RUN usermod -a -G root mssql
-
 #informa o Mantenedor dessa imagem que criaremos (Você pode colocar seu prórpio nome):
 LABEL MAINTAINER="Renan Rossi"
 
@@ -28,11 +26,8 @@ EXPOSE 5022
 VOLUME sqlnode1:/var/opt/mssql/data/sqlNode1
 
 #Executando o bash após a criação do container e acessando o diretório onde ficam a ferramenta sqlcmd:
-ENTRYPOINT /bin/bash
-WORKDIR cd /opt/mssql-tools/bin/sqlcmd
-
-#Executar processo do SQL Server:
-CMD /opt/mssql/bin/sqlservr  
+#ENTRYPOINT /bin/bash
+#WORKDIR cd /opt/mssql-tools/bin/sqlcmd
 
 # Set permissions (if you are using docker with windows, you don´t need to do this)
 #RUN chown mssql:mssql /usr/certificate/dbm_certificate.pvk
@@ -41,5 +36,5 @@ CMD /opt/mssql/bin/sqlservr
 # Enable availability groups
 #RUN /opt/mssql/bin/mssql-conf set hadr.hadrenabled 1
 
-
-
+#Executar processo do SQL Server:
+CMD /opt/mssql/bin/sqlservr
