@@ -7,26 +7,28 @@ Templates de Docker para criar um grupo de Alta DIsponibilidade (HA) com 03 nós
 
 Estes laboratório foi criada em cima de um servidor Linux Ubuntu 18.04 rodando Docker 19.03, portanto partirei do presuporto que seu ambiente estará com esta confguração ou similar compativel. 
 
-1 - Faça o clone deste repositório em uma maquina Linux a qual você utilizará para subir os dockers.
+1. Faça o clone deste repositório em uma maquina Linux a qual você utilizará para subir os dockers.
 
-2 - Acesse a raiz do diretório onde clonou este repositório e envie o comando abaixo.
-OBS: Este comando irá construir a infraestrutura seguindo os parametros especificados no arquivo de docker-compose. 
-OBS: Este arquivo de docker-compose foi criado baseado na imagem gerada pelo 2017.Dockerfile. 
+2. Acesse a raiz do diretório onde clonou este repositório e envie o comando abaixo.
+_OBS: Este comando irá construir a infraestrutura seguindo os parametros especificados no arquivo de docker-compose._
+_OBS: Este arquivo de docker-compose foi criado baseado na imagem gerada pelo 2017.Dockerfile._
 
 ```cmd
 docker-compose build
 ```
 
-3 - Execute o comando abaixo para rodar a infra construida no comando anterior:
+3. Execute o comando abaixo para rodar a infra construida no comando anterior:
 
 ```cmd
 docker-compose up
 ```
-Agor
+Agora você possui 3 nós na mesma rede preparados para fazerem parte de um novo Availability Group. 
 
-_Now, you have a 3 node sharing the network and prepared to be part of a new availability group_
+4. Conecte no nó 1 (sqlnode1)e execute o script abaixo para realizar a criação do grupo de disponibilidade:
 
-3. Connect to sqlNode1 (for example) and [create the availability group](###Create_availability_group)
+
+
+
 
 _NOTE: You can [add manually more nodes](###Add_extra_nodes_to_the_availability_group) (up to 9)_
 
