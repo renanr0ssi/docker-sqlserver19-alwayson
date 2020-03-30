@@ -151,7 +151,7 @@ docker run -p 14333:1433 -it docker-sqlserver2017-alwayson
 ```
 
 4. Conectar na instancia desse banco que acabamos de subir e executar o script abaixo para que seja criado o login de acesso utilizando o certificado recém-criado:
-_OBS: pode-se conectar utilizando o Visual Studio Code (pegar o IP do container utilizando o comando Docker Inspect ID_DO_CONTAINER ou atraves do comando: (*docker exec -it sqlnode1 "bash"*) e dentro dele rodar o (/opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P PaSSw0rd))_
+_OBS: pode-se conectar utilizando o Visual Studio Code (pegar o IP do container utilizando o comando Docker Inspect ID_DO_CONTAINER) ou atraves do comando: (*docker exec -it sqlnode1 "bash"*) e dentro dele rodar o (/opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P PaSSw0rd)_
 
 ```sql
 CREATE LOGIN dbm_login WITH PASSWORD = 'Pa$$w0rd';
@@ -184,39 +184,32 @@ GRANT CONNECT ON ENDPOINT::[Hadr_endpoint] TO [dbm_login]
 GO
 ```
 
-5. Stop the docker container
+5. Parar o container (docker stop ID_DO_CONTAINER)
 
-6. Search for the _CONTAINER ID_ that we want to create as a new image
+6. Commitar o container com a nova imagem:
 
 ```cmd
-docker container list -a
+docker commit ID_DO_CONTAINER sql2017_alwayson_node 
 ```
 
-7. Commit the container as a new image
+7. Tagear a imagem a ser criada:
+_OBS: o comando (docker images) traz os IDs das imagens._
 
 ```cmd
-docker commit 17fed7500df3 sql2017_alwayson_node 
+docker tag ID_DA_IMAGEM renanrossi/docker-sqlserver2017-alwayson
 ```
 
-8. Search for the _IMAGE ID_ of the new image created in the previous step
+8. Realizar login no docker (docker login).
+
+9. Dar Push para o repostório no Docker Hub:
 
 ```cmd
-docker image list
-```
-
-9. Put a tag to the image
-
-```cmd
-docker tag 530873517958 enriquecatala/sql2017_alwayson_node:latest
-```
-
-10. Push to your repository
-
-```cmd
-docker push enriquecatala/sql2017_alwayson_node
+docker push renanrossi/docker-sqlserver2017-alwayson
 ```
 
 
-### References
-
+### Referencias:
 https://docs.microsoft.com/en-us/sql/linux/sql-server-linux-availability-group-cross-platform?view=sql-server-2017
+https://docs.microsoft.com/pt-br/sql/linux/quickstart-install-connect-docker?view=sql-server-ver15&pivots=cs1-bash
+https://docs.microsoft.com/pt-br/sql/linux/sql-server-linux-configure-docker?view=sql-server-ver15
+
