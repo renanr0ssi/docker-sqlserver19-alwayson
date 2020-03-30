@@ -1,5 +1,5 @@
 #Baixar imagem de SQL Server 2019 com Ubuntu 18.04:
-FROM mcr.microsoft.com/mssql/server:2019-CU3-ubuntu-18.04
+FROM mcr.microsoft.com/mssql/server:2017-CU19-ubuntu-16.04
 
 #Aceite dos termos do SQL Server, seta senha do user SA e utiliza a licença de Dev:
 ENV ACCEPT_EULA=Y
@@ -23,7 +23,7 @@ EXPOSE 1433
 EXPOSE 5022
 
 #Cria um volume para persistência de dados:
-VOLUME sqlnode1:/var/opt/mssql/data/sqlNode1
+#VOLUME sqlnode1:/var/opt/mssql/data/sqlNode1
 
 #Executando o bash após a criação do container e acessando o diretório onde ficam a ferramenta sqlcmd:
 #ENTRYPOINT /bin/bash
@@ -34,7 +34,7 @@ VOLUME sqlnode1:/var/opt/mssql/data/sqlNode1
 #RUN chown mssql:mssql /usr/certificate/dbm_certificate.cer
 
 # Enable availability groups
-#RUN /opt/mssql/bin/mssql-conf set hadr.hadrenabled 1
+RUN /opt/mssql/bin/mssql-conf set hadr.hadrenabled 1
 
 #Executar processo do SQL Server:
 CMD /opt/mssql/bin/sqlservr
