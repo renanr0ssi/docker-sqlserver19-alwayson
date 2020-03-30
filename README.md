@@ -57,8 +57,8 @@ CREATE AVAILABILITY GROUP [AG1]
             )
 ```
 
-_OBS: Aconselho utilizar o Visual Studio Code para se conectar nas bases e rodar os scripts pela interface gráfica.
-_OBS: Você pdoerá adicionar mais nós (max de 9) utilizando o comando mais abaixo neste documento [add manually more nodes](###Add_extra_nodes_to_the_availability_group).
+_OBS: Aconselho utilizar o Visual Studio Code para se conectar nas bases e rodar os scripts pela interface gráfica._
+_OBS: Você pdoerá adicionar mais nós (max de 9) utilizando o comando mais abaixo neste documento._
 
 5. Conectar as instâncias dos demais nós e executar o script abaixo para linká-los ao Availability Group criado no passo anterior: 
 
@@ -68,14 +68,14 @@ ALTER AVAILABILITY GROUP [ag1] GRANT CREATE ANY DATABASE
 GO
 ```
 
-6. Por fim, crie as bases que afrão parte do grupo de disponibilidade e execute o comando abaixo (trocar "SuaBase" pelo nome da base de dados que tiver sido criada por você):
+6. Por fim, crie as bases que farão parte do grupo de disponibilidade e execute o comando abaixo (trocar "SuaBase" pelo nome da base de dados que tiver sido criada por você):
 
 ```sql
 ALTER AVAILABILITY GROUP [ag1] ADD DATABASE SuaBase
 GO
 ```
 
-_OBS: Esta base deverá ser criada no nó primário e deverá ter um backup full. 
+_OBS: Esta base deverá ser criada no nó primário e deverá ter um backup full._
 
 
 
@@ -112,9 +112,10 @@ PRINT @create_ag
 ```
 
 
-## Como criar uma imagem do zero:
+## Como criar uma imagem do zero utilizando este repositório:
 
 1. Primeiramente, será necessário fazer a criação dos certificados que usaremos para fazer a comunicação entre os bancos. Para isso, será necessário se conectar em alguma instancia de banco do Sql Server 2017 e executar o comando abaixo (pode ser realmente qualquer uam instância, podendo ser ate mesmo um docker rodando a imagem limpa do SQL). 
+_OBS: Ajuste o diretório ao qual você quer alocar o seu certificado:_
 
 ```sql
 USE master
@@ -128,29 +129,29 @@ CREATE MASTER KEY ENCRYPTION BY PASSWORD = 'Pa$$w0rd';
 go
 CREATE CERTIFICATE dbm_certificate WITH SUBJECT = 'dbm';
 BACKUP CERTIFICATE dbm_certificate
-TO FILE = 'd:\borrame\dbm_certificate.cer'
+TO FILE = '/home/usuario/repositorio-git/certificate/dbm_certificate.cer'
 WITH PRIVATE KEY (
-        FILE = 'd:\borrame\dbm_certificate.pvk',
+        FILE = '/home/usuario/repositorio-git/certificate/dbm_certificate.pvk',
         ENCRYPTION BY PASSWORD = 'Pa$$w0rd'
     );
 GO
 ```
 
-_This will be used to create a sql login maped to the certificate and replicated to the secondary nodes, required to create the AG_
 
-2. Build the image
-
-```cmd
-docker build -t sql2017_alwayson_node .
-```
-
-3. Run the container
+2. Buildar a imagem utilizando o 2017.dockerfile:
 
 ```cmd
-docker run -p 14333:1433 -it sql2017_alwayson_node
+docker build -t docker-sqlserver2017-alwayson .
 ```
 
-4. Connect to the 127.0.0.1,14333 and create the following login with certificate to be able to create the AO without cluster
+3. Rodar o container com a imagem buildada:
+
+```cmd
+docker run -p 14333:1433 -it docker-sqlserver2017-alwayson
+```
+
+4. Conectar na instancia desse banco que acabamos de subir e executar o script abaixo para que seja criado o login de acesso utilizando o certificado recém-criado:
+_OBS: pode-se conectar utilizando o Visual Studio Code (pegar o IP do container utilizando o comando Docker Inspect ID_DO_CONTAINER ou atraves do comando: (*docker exec -it sqlnode1 "bash"*) e dentro dele rodar o (/opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P PaSSw0rd))_
 
 ```sql
 CREATE LOGIN dbm_login WITH PASSWORD = 'Pa$$w0rd';
