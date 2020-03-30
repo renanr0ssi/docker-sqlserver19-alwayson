@@ -22,8 +22,17 @@ COPY ${CERTFILE_PWD} ./certificate
 EXPOSE 1433
 EXPOSE 5022
 
-#Cria um volume para persistência de dados:
-VOLUME sqlnode1:/var/opt/mssql/data/sqlNode1
+#Habilita o Grupo de Disponibilidade
+RUN /opt/mssql/bin/mssql-conf set hadr.hadrenabled 1
+#Comando que restarta o serviço do sqlserver
+#RUN systemctl restart mssql-server
+
+#Executar processo do SQL Server:
+CMD /opt/mssql/bin/sqlservr
+
+#DESATIVADOS
+#Cria um volume para persistência de dados (já apresentado no compose):
+#VOLUME sqlnode1:/var/opt/mssql/data/sqlNode1
 
 #Executando o bash após a criação do container e acessando o diretório onde ficam a ferramenta sqlcmd:
 #ENTRYPOINT /bin/bash
@@ -32,9 +41,3 @@ VOLUME sqlnode1:/var/opt/mssql/data/sqlNode1
 # Set permissions (if you are using docker with windows, you don´t need to do this)
 #RUN chown mssql:mssql /usr/certificate/dbm_certificate.pvk
 #RUN chown mssql:mssql /usr/certificate/dbm_certificate.cer
-
-# Enable availability groups
-#RUN /opt/mssql/bin/mssql-conf set hadr.hadrenabled 1
-
-#Executar processo do SQL Server:
-CMD /opt/mssql/bin/sqlservr
