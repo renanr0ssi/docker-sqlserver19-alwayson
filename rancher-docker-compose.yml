@@ -7,7 +7,7 @@ services:
     hostname:
         rancher-server  
     volumes:
-      - racnher-master:/data/rancher
+      - rancher-master:/data/rancher
     networks:
       - rancher
 
