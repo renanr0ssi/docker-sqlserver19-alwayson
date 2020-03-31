@@ -1,73 +1,40 @@
 version: '3'
 
 services:
-  db1:
-    container_name: sqlnode1
-    image: renanrossi/docker-sqlserver2017-alwayson
+  rancher-master:
+    container_name: rancher-server
+    image: ubuntu
     hostname:
-        sqlnode1    
+        rancher-server  
     volumes:
-      - datadb1:/var/opt/mssql/data/sqlNode1
-    environment:
-      MSSQL_SA_PASSWORD: "Pa$$w0rd"
-      ACCEPT_EULA: "Y"
-      MSSQL_PID: "Developer"
-    ports:
-      - "14331:1433"
-      - "15021:5022"
+      - racnher-master:/data/rancher
     networks:
-      - nodes-sql
-    #extra_hosts:
-    #  - "sqlNode1:172.18.0.4"
-    #  - "sqlNode2:172.18.0.3"      
-    #  - "sqlNode3:172.18.0.2"
+      - rancher
 
-  db2:
-    container_name: sqlnode2
-    image: renanrossi/docker-sqlserver2017-alwayson
+  rancher-node1:
+    container_name: rancher-node1
+    image: ubuntu
     hostname:
-        sqlnode2
+        rancher-node1
     volumes:
-      - datadb2:/var/opt/mssql/data/sqlNode2
-    environment:
-      MSSQL_SA_PASSWORD: "PaSSw0rd"
-      ACCEPT_EULA: "Y"
-      MSSQL_PID: "Developer"
-    ports:
-      - "14332:1433"
-      - "15022:5022"
+      - rancher-node1:/data/rancher
     networks:
-      - nodes-sql
-    #extra_hosts:
-    #  - "sqlNode1:172.18.0.4"
-    #  - "sqlNode2:172.18.0.3"      
-    #  - "sqlNode3:172.18.0.2"
+      - rancher
 
-  db3:
-    container_name: sqlnode3
-    image: renanrossi/docker-sqlserver2017-alwayson
+  rancher-node2:
+    container_name: rancher-node2
+    image: ubuntu
     hostname:
-        sqlnode3 
+        rancher-node2 
     volumes:
-      - datadb3:/var/opt/mssql/data/sqlNode3
-    environment:
-      MSSQL_SA_PASSWORD: "Pa$$w0rd"
-      ACCEPT_EULA: "Y"
-      MSSQL_PID: "Developer"      
-    ports:
-      - "14333:1433"
-      - "15023:5022"
+      - rancher-node2:/var/opt/mssql/data/sqlNode3
     networks:
-      - nodes-sql
-    #extra_hosts:
-    #  - "sqlNode1:172.18.0.4"
-    #  - "sqlNode2:172.18.0.3"      
-    #  - "sqlNode3:172.18.0.2"
+      - rancher
 
 volumes:
-  datadb1:
-  datadb2:
-  datadb3:
+  rancher-server:
+  rancher-node1:
+  rancher-node2:
   
 networks:
-  nodes-sql:
+  rancher:
