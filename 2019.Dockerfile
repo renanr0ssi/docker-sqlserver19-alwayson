@@ -2,9 +2,9 @@
 FROM mcr.microsoft.com/mssql/server:2019-CU3-ubuntu-18.04
 
 # Atualiza a imagem com os pacotes
-RUN apt-mark hold msodbcsql17
-RUN apt-get update && apt-get upgrade -y
-RUN apt-get install iputils-ping -y
+#RUN apt-mark hold msodbcsql17
+#RUN apt-get update && apt-get upgrade -y
+#RUN apt-get install iputils-ping -y
 
 #Aceite dos termos do SQL Server, seta senha do user SA e utiliza a licença de Dev:
 ENV ACCEPT_EULA=Y
