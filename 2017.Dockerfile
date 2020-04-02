@@ -5,6 +5,7 @@ FROM mcr.microsoft.com/mssql/server:2017-CU19-ubuntu-16.04
 RUN apt-mark hold msodbcsql17
 RUN apt-get update && apt-get upgrade -y
 RUN apt-get install iputils-ping -y
+RUN apt-get install nano -y
 
 #Aceite dos termos do SQL Server, seta senha do user SA e utiliza a licença de Dev:
 ENV ACCEPT_EULA=Y
