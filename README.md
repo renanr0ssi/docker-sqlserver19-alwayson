@@ -10,11 +10,10 @@ Estes laboratório foi criada em cima de um servidor Linux Ubuntu 18.04 rodando 
 1. Faça o clone deste repositório em uma maquina Linux a qual você utilizará para subir os dockers.
 
 2. Acesse a raiz do diretório onde clonou este repositório e envie o comando abaixo.
-
-
 ```cmd
 docker-compose build
 ```
+
 _OBS: Este comando irá construir a infraestrutura seguindo os parametros especificados no arquivo de docker-compose._
 _OBS: Este arquivo de docker-compose foi criado baseado na imagem gerada pelo 2017.Dockerfile._
 
@@ -68,15 +67,25 @@ ALTER AVAILABILITY GROUP [ag1] GRANT CREATE ANY DATABASE
 GO
 ```
 
-6. Por fim, crie as bases que farão parte do grupo de disponibilidade e execute o comando abaixo (trocar "SuaBase" pelo nome da base de dados que tiver sido criada por você):
+6. Por fim, crie as bases que farão parte do grupo de disponibilidade, sete o BKP e ative-a no Grupo de Disponibilidade. O comando abaixo trata estes pontos (trocar "SuaBase01" pelo nome da base de dados que tiver sido criada por você). 
 
 ```sql
-ALTER AVAILABILITY GROUP [ag1] ADD DATABASE SuaBase
-GO
+CREATE DATABASE [SuaBase01];
+ALTER DATABASE [SuaBase01] SET RECOVERY FULL;
+BACKUP DATABASE [SuaBase01] 
+   TO DISK = N'/var/opt/mssql/data/SuaBase01.bak';
+
+ALTER AVAILABILITY GROUP [ag1] ADD DATABASE [db1];
 ```
 
 _OBS: Esta base deverá ser criada no nó primário e deverá ter um backup full._
 
+7. Execute o comando abaixo nos nós secundários para validar se a replicação foi realizada com sucesso entre os nós:
+```sql
+SELECT * FROM sys.databases WHERE name = 'SuaBase01';
+GO
+SELECT DB_NAME(database_id) AS 'database', synchronization_state_desc FROM sys.dm_hadr_database_replica_states;
+```
 
 
 ### Adicionar nós extras no grupo de disponibilidade:
@@ -141,7 +150,7 @@ GO
 2. Buildar a imagem utilizando o 2017.dockerfile:
 
 ```cmd
-docker build -t docker-sqlserver2017-alwayson .
+docker build -t docker-sqlserver2017-alwayson -f 2017.Dockerfile .
 ```
 
 3. Rodar o container com a imagem buildada:
@@ -184,25 +193,28 @@ GRANT CONNECT ON ENDPOINT::[Hadr_endpoint] TO [dbm_login]
 GO
 ```
 
-5. Parar o container (docker stop ID_DO_CONTAINER)
+5. Parar o container:
+```cmd
+docker stop ID_DO_CONTAINER
+```
 
 6. Commitar o container com a nova imagem:
-
 ```cmd
 docker commit ID_DO_CONTAINER sql2017_alwayson_node 
 ```
 
 7. Tagear a imagem a ser criada:
 _OBS: o comando (docker images) traz os IDs das imagens._
-
 ```cmd
 docker tag ID_DA_IMAGEM renanrossi/docker-sqlserver2017-alwayson
 ```
 
-8. Realizar login no docker (docker login).
+8. Realizar login no docker:
+```cmd
+docker login
+```
 
 9. Dar Push para o repostório no Docker Hub:
-
 ```cmd
 docker push renanrossi/docker-sqlserver2017-alwayson
 ```
