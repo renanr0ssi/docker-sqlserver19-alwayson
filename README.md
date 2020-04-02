@@ -87,6 +87,7 @@ GO
 SELECT DB_NAME(database_id) AS 'database', synchronization_state_desc FROM sys.dm_hadr_database_replica_states;
 ```
 
+_____________________________________________________________________________________________________________________
 
 ## Adicionar nós extras no grupo de disponibilidade:
 
@@ -120,6 +121,8 @@ SELECT @create_ag = REPLACE(@cmd,'<SQLInstanceName>',@servername)
 PRINT @create_ag
 ```
 
+
+_____________________________________________________________________________________________________________________
 
 ## Como criar uma imagem do zero utilizando este repositório:
 
