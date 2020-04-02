@@ -88,7 +88,7 @@ SELECT DB_NAME(database_id) AS 'database', synchronization_state_desc FROM sys.d
 ```
 
 
-### Adicionar nós extras no grupo de disponibilidade:
+## Adicionar nós extras no grupo de disponibilidade:
 
 1. Execute o script abaixo no nó o qual você queira adicionar.
 2. Copie a saida desse script e execute ele novamente no nó primário.
