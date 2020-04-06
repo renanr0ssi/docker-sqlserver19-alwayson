@@ -222,33 +222,49 @@ systemctl enable pacemaker
 /etc/init.d/pcsd start
 ```
 
-08. Parar o container:
+08. Criar login de SQL para o Pacemaker e salvar suas credenciais:
+```sql
+USE [master]
+GO
+CREATE LOGIN hacluster with PASSWORD= N'PaSSw0rd'
+ALTER SERVER ROLE [sysadmin] ADD MEMBER hacluster
+```
+
+```cmd
+echo 'hacluster' >> ~/pacemaker-passwd
+echo 'PaSSw0rd' >> ~/pacemaker-passwd
+mv ~/pacemaker-passwd /var/opt/mssql/secrets/passwd
+chown root:root /var/opt/mssql/secrets/passwd
+chmod 400 /var/opt/mssql/secrets/passwd # Only readable by root
+```
+
+09. Parar o container:
 ```cmd
 docker stop ID_DO_CONTAINER
 ```
 
-09. Commitar o container com a nova imagem:
+10. Commitar o container com a nova imagem:
 ```cmd
-docker commit ID_DO_CONTAINER sql2017_alwayson_node 
+docker commit ID_DO_CONTAINER docker-sqlserver2017-pacemaker
 ```
 
-10. Tagear a imagem a ser criada:
+11. Tagear a imagem a ser criada:
 _OBS: o comando (docker images) traz os IDs das imagens._
 ```cmd
-docker tag ID_DA_IMAGEM renanrossi/docker-sqlserver2017-alwayson
+docker tag ID_DA_IMAGEM renanrossi/docker-sqlserver2017-pacemaker
 ```
 
-8. Realizar login no docker:
+12. Realizar login no docker:
 ```cmd
 docker login
 ```
 
-9. Dar Push para o repostório no Docker Hub:
+13. Dar Push para o repostório no Docker Hub:
 ```cmd
-docker push renanrossi/docker-sqlserver2017-alwayson
+docker push renanrossi/docker-sqlserver2017-pacemaker
 ```
 
-
+_____________________________________________________________________________________________________________________
 ### Referencias:
 https://docs.microsoft.com/en-us/sql/linux/sql-server-linux-availability-group-cross-platform?view=sql-server-2017
 https://docs.microsoft.com/pt-br/sql/linux/quickstart-install-connect-docker?view=sql-server-ver15&pivots=cs1-bash
