@@ -124,7 +124,7 @@ ________________________________________________________________________________
 
 ## Como criar uma imagem do zero utilizando este repositório:
 
-1. Primeiramente, será necessário fazer a criação dos certificados que usaremos para fazer a comunicação entre os bancos. Para isso, será necessário se conectar em alguma instancia de banco do Sql Server 2017 e executar o comando abaixo (pode ser realmente qualquer uam instância, podendo ser ate mesmo um docker rodando a imagem limpa do SQL). 
+01. Primeiramente, será necessário fazer a criação dos certificados que usaremos para fazer a comunicação entre os bancos. Para isso, será necessário se conectar em alguma instancia de banco do Sql Server 2017 e executar o comando abaixo (pode ser realmente qualquer uam instância, podendo ser ate mesmo um docker rodando a imagem limpa do SQL). 
 _OBS: Ajuste o diretório ao qual você quer alocar o seu certificado:_
 
 ```sql
@@ -148,19 +148,19 @@ GO
 ```
 
 
-2. Buildar a imagem utilizando o 2017.dockerfile:
+02. Buildar a imagem utilizando o 2017.dockerfile:
 
 ```cmd
 docker build -t docker-sqlserver2017-pacemaker -f 2017.Dockerfile .
 ```
 
-3. Rodar o container com a imagem buildada:
+03. Rodar o container com a imagem buildada:
 
 ```cmd
 docker run -p 14333:1433 -it docker-sqlserver2017-pacemaker
 ```
 
-4. Conectar na instancia desse banco que acabamos de subir e executar os 2 scripts abaixo para que seja:
+04. Conectar na instancia desse banco que acabamos de subir e executar os 2 scripts abaixo para que seja:
 * habilitada a sessão de eventos 
 * criado o login de acesso utilizando o certificado recém-criado
 * criado os endpoints de comunicação
@@ -203,17 +203,35 @@ GRANT CONNECT ON ENDPOINT::[Hadr_endpoint] TO [dbm_login]
 GO
 ```
 
-5. Parar o container:
+05. Rodar o comando abaixo para acessar o container via terminal:
+```cmd
+docker init -it NOME_DO_CONTAINER "bash"
+```
+
+06. Realizar a troca da senha do PaceMaker utilizando o comando abaixo:
+```cmd
+passwd hacluster
+```
+_OBS: Utilizar a senha: PaSSw0rd_
+
+07. Habilitar e Iniciar o PCSD e o PaceMaker:
+```cmd
+systemctl enable pcsd
+systemctl enable pacemaker
+/etc/init.d/pcsd start
+```
+
+08. Parar o container:
 ```cmd
 docker stop ID_DO_CONTAINER
 ```
 
-6. Commitar o container com a nova imagem:
+09. Commitar o container com a nova imagem:
 ```cmd
 docker commit ID_DO_CONTAINER sql2017_alwayson_node 
 ```
 
-7. Tagear a imagem a ser criada:
+10. Tagear a imagem a ser criada:
 _OBS: o comando (docker images) traz os IDs das imagens._
 ```cmd
 docker tag ID_DA_IMAGEM renanrossi/docker-sqlserver2017-alwayson
