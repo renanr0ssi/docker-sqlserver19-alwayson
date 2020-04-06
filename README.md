@@ -151,13 +151,13 @@ GO
 2. Buildar a imagem utilizando o 2017.dockerfile:
 
 ```cmd
-docker build -t docker-sqlserver2017-alwayson -f 2017.Dockerfile .
+docker build -t docker-sqlserver2017-pacemaker -f 2017.Dockerfile .
 ```
 
 3. Rodar o container com a imagem buildada:
 
 ```cmd
-docker run -p 14333:1433 -it docker-sqlserver2017-alwayson
+docker run -p 14333:1433 -it docker-sqlserver2017-pacemaker
 ```
 
 4. Conectar na instancia desse banco que acabamos de subir e executar o script abaixo para que seja criado o login de acesso utilizando o certificado recém-criado:
