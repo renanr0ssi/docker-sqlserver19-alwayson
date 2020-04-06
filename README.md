@@ -64,7 +64,7 @@ ALTER AVAILABILITY GROUP [ag1] JOIN WITH (CLUSTER_TYPE = EXTERNAL);
 ALTER AVAILABILITY GROUP [ag1] GRANT CREATE ANY DATABASE;
 ```
 
-6. Conceder os devidos privilégios ao login do PaceMaker:
+6. Conceder os devidos privilégios ao login do PaceMaker em todos os nós (incluindo o primário):
 ```sql
 GRANT ALTER, CONTROL, VIEW DEFINITION ON AVAILABILITY GROUP::ag1 TO hacluster
 GRANT VIEW SERVER STATE TO hacluster
@@ -83,7 +83,7 @@ ALTER AVAILABILITY GROUP [ag1] ADD DATABASE [db1];
 
 _OBS: Esta base deverá ser criada no nó primário e deverá ter um backup full._
 
-7. Execute o comando abaixo nos nós secundários para validar se a replicação foi realizada com sucesso entre os nós:
+8. Execute o comando abaixo nos nós secundários para validar se a replicação foi realizada com sucesso entre os nós:
 ```sql
 SELECT * FROM sys.databases WHERE name = 'SuaBase01';
 GO
