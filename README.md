@@ -64,7 +64,13 @@ ALTER AVAILABILITY GROUP [ag1] JOIN WITH (CLUSTER_TYPE = EXTERNAL);
 ALTER AVAILABILITY GROUP [ag1] GRANT CREATE ANY DATABASE;
 ```
 
-6. Por fim, crie as bases que farão parte do grupo de disponibilidade, sete o BKP e ative-a no Grupo de Disponibilidade. O comando abaixo trata estes pontos (trocar "SuaBase01" pelo nome da base de dados que tiver sido criada por você). 
+6. Conceder os devidos privilégios ao login do PaceMaker:
+```sql
+GRANT ALTER, CONTROL, VIEW DEFINITION ON AVAILABILITY GROUP::ag1 TO <pacemakerLogin>
+GRANT VIEW SERVER STATE TO <pacemakerLogin>
+```
+
+7. Por fim, crie as bases que farão parte do grupo de disponibilidade, sete o BKP e ative-a no Grupo de Disponibilidade. O comando abaixo trata estes pontos (trocar "SuaBase01" pelo nome da base de dados que tiver sido criada por você). 
 
 ```sql
 CREATE DATABASE [SuaBase01];
