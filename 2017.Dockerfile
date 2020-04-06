@@ -32,7 +32,7 @@ COPY ${CERTFILE_PWD} ./certificate
 RUN apt-get install pacemaker pcs fence-agents resource-agents -y
 
 #Instala agente de recursos do SQL Server para integração com o Pacemaker
-RUN apt-get install mssql-server-ha
+#RUN apt-get install mssql-server-ha
 
 #Habilita o Grupo de Disponibilidade
 RUN /opt/mssql/bin/mssql-conf set hadr.hadrenabled 1
