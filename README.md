@@ -55,14 +55,13 @@ ALTER AVAILABILITY GROUP [ag1] GRANT CREATE ANY DATABASE;
 ```
 
 _OBS: Aconselho utilizar o Visual Studio Code para se conectar nas bases e rodar os scripts pela interface gráfica._
-_OBS: Você pdoerá adicionar mais nós (max de 9) utilizando o comando mais abaixo neste documento._
+_OBS: Você pdoerá adicionar mais nós (max de 9, sendo um primário e 8 secondarios) utilizando o comando mais abaixo neste documento._
 
 5. Conectar as instâncias dos demais nós e executar o script abaixo para linká-los ao Availability Group criado no passo anterior: 
 
 ```sql
-ALTER AVAILABILITY GROUP [ag1] JOIN WITH (CLUSTER_TYPE = NONE)
-ALTER AVAILABILITY GROUP [ag1] GRANT CREATE ANY DATABASE
-GO
+ALTER AVAILABILITY GROUP [ag1] JOIN WITH (CLUSTER_TYPE = EXTERNAL);
+ALTER AVAILABILITY GROUP [ag1] GRANT CREATE ANY DATABASE;
 ```
 
 6. Por fim, crie as bases que farão parte do grupo de disponibilidade, sete o BKP e ative-a no Grupo de Disponibilidade. O comando abaixo trata estes pontos (trocar "SuaBase01" pelo nome da base de dados que tiver sido criada por você). 
