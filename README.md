@@ -30,28 +30,27 @@ Agora você possui 3 nós na mesma rede preparados para fazerem parte de um novo
 CREATE AVAILABILITY GROUP [ag1]
      WITH (DB_FAILOVER = ON, CLUSTER_TYPE = EXTERNAL)
      FOR REPLICA ON
-         N'<node1>' 
+     N'sqlnode1'
           WITH (
-             ENDPOINT_URL = N'tcp://<node1>:<5022>',
+             ENDPOINT_URL = N'tcp://sqlnode1:5022',
              AVAILABILITY_MODE = SYNCHRONOUS_COMMIT,
              FAILOVER_MODE = EXTERNAL,
              SEEDING_MODE = AUTOMATIC
              ),
-         N'<node2>' 
+     N'sqlnode2'
           WITH ( 
-             ENDPOINT_URL = N'tcp://<node2>:<5022>', 
+             ENDPOINT_URL = N'tcp://sqlnode2:5022',
              AVAILABILITY_MODE = SYNCHRONOUS_COMMIT,
              FAILOVER_MODE = EXTERNAL,
              SEEDING_MODE = AUTOMATIC
              ),
-         N'<node3>'
+         N'sqlnode3'
          WITH( 
-            ENDPOINT_URL = N'tcp://<node3>:<5022>', 
+            ENDPOINT_URL = N'tcp://sqlnode3:5022',
             AVAILABILITY_MODE = SYNCHRONOUS_COMMIT,
             FAILOVER_MODE = EXTERNAL,
             SEEDING_MODE = AUTOMATIC
             );
-
 ALTER AVAILABILITY GROUP [ag1] GRANT CREATE ANY DATABASE;
 ```
 
