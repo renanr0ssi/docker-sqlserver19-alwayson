@@ -3,7 +3,7 @@ version: '3'
 services:
   db1:
     container_name: sqlnode1
-    image: renanrossi/docker-sqlserver2017-alwayson
+    image: renanrossi/docker-sqlserver2017-pacemaker
     hostname:
         sqlnode1    
     volumes:
@@ -24,7 +24,7 @@ services:
 
   db2:
     container_name: sqlnode2
-    image: renanrossi/docker-sqlserver2017-alwayson
+    image: renanrossi/docker-sqlserver2017-pacemaker
     hostname:
         sqlnode2
     volumes:
@@ -45,7 +45,7 @@ services:
 
   db3:
     container_name: sqlnode3
-    image: renanrossi/docker-sqlserver2017-alwayson
+    image: renanrossi/docker-sqlserver2017-pacemaker
     hostname:
         sqlnode3 
     volumes:
