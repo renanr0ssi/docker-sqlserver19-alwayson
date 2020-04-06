@@ -73,19 +73,19 @@ GRANT VIEW SERVER STATE TO hacluster
 7. Por fim, crie as bases que farão parte do grupo de disponibilidade, sete o BKP e ative-a no Grupo de Disponibilidade. O comando abaixo trata estes pontos (trocar "SuaBase01" pelo nome da base de dados que tiver sido criada por você). 
 
 ```sql
-CREATE DATABASE [SuaBase01];
-ALTER DATABASE [SuaBase01] SET RECOVERY FULL;
-BACKUP DATABASE [SuaBase01] 
-   TO DISK = N'/var/opt/mssql/data/SuaBase01.bak';
+CREATE DATABASE [BaseTeste01];
+ALTER DATABASE [BaseTeste01] SET RECOVERY FULL;
+BACKUP DATABASE [BaseTeste01] 
+   TO DISK = N'/var/opt/mssql/data/BaseTeste01.bak';
 
-ALTER AVAILABILITY GROUP [ag1] ADD DATABASE [db1];
+ALTER AVAILABILITY GROUP [ag1] ADD DATABASE [BaseTeste01];
 ```
 
 _OBS: Esta base deverá ser criada no nó primário e deverá ter um backup full._
 
 8. Execute o comando abaixo nos nós secundários para validar se a replicação foi realizada com sucesso entre os nós:
 ```sql
-SELECT * FROM sys.databases WHERE name = 'SuaBase01';
+SELECT * FROM sys.databases WHERE name = 'BaseTeste01';
 GO
 SELECT DB_NAME(database_id) AS 'database', synchronization_state_desc FROM sys.dm_hadr_database_replica_states;
 ```
