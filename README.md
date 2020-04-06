@@ -218,6 +218,7 @@ _OBS: Utilizar a senha: PaSSw0rd_
 ```cmd
 systemctl enable pcsd
 systemctl enable pacemaker
+/etc/init.d/pacemaker start
 /etc/init.d/pcsd start
 ```
 
