@@ -27,33 +27,32 @@ Agora você possui 3 nós na mesma rede preparados para fazerem parte de um novo
 4. Conecte no nó 1 (sqlnode1) e execute o script abaixo para realizar a criação do grupo de disponibilidade:
 
 ```sql
-CREATE AVAILABILITY GROUP [AG1]
-    WITH (CLUSTER_TYPE = NONE)
-    FOR REPLICA ON
-    N'sqlnode1'
-        WITH (
-        ENDPOINT_URL = N'tcp://sqlnode1:5022',
-        AVAILABILITY_MODE = ASYNCHRONOUS_COMMIT,
-            SEEDING_MODE = AUTOMATIC,
-            FAILOVER_MODE = MANUAL,
-        SECONDARY_ROLE (ALLOW_CONNECTIONS = ALL)
-            ),
-    N'sqlnode2'
-        WITH (
-        ENDPOINT_URL = N'tcp://sqlnode2:5022',
-        AVAILABILITY_MODE = ASYNCHRONOUS_COMMIT,
-            SEEDING_MODE = AUTOMATIC,
-            FAILOVER_MODE = MANUAL,
-        SECONDARY_ROLE (ALLOW_CONNECTIONS = ALL)
-            ),
-    N'sqlnode3'
-        WITH (
-        ENDPOINT_URL = N'tcp://sqlnode3:5022',
-        AVAILABILITY_MODE = ASYNCHRONOUS_COMMIT,
-            SEEDING_MODE = AUTOMATIC,
-            FAILOVER_MODE = MANUAL,
-        SECONDARY_ROLE (ALLOW_CONNECTIONS = ALL)
-            )
+CREATE AVAILABILITY GROUP [ag1]
+     WITH (DB_FAILOVER = ON, CLUSTER_TYPE = EXTERNAL)
+     FOR REPLICA ON
+         N'<node1>' 
+          WITH (
+             ENDPOINT_URL = N'tcp://<node1>:<5022>',
+             AVAILABILITY_MODE = SYNCHRONOUS_COMMIT,
+             FAILOVER_MODE = EXTERNAL,
+             SEEDING_MODE = AUTOMATIC
+             ),
+         N'<node2>' 
+          WITH ( 
+             ENDPOINT_URL = N'tcp://<node2>:<5022>', 
+             AVAILABILITY_MODE = SYNCHRONOUS_COMMIT,
+             FAILOVER_MODE = EXTERNAL,
+             SEEDING_MODE = AUTOMATIC
+             ),
+         N'<node3>'
+         WITH( 
+            ENDPOINT_URL = N'tcp://<node3>:<5022>', 
+            AVAILABILITY_MODE = SYNCHRONOUS_COMMIT,
+            FAILOVER_MODE = EXTERNAL,
+            SEEDING_MODE = AUTOMATIC
+            );
+
+ALTER AVAILABILITY GROUP [ag1] GRANT CREATE ANY DATABASE;
 ```
 
 _OBS: Aconselho utilizar o Visual Studio Code para se conectar nas bases e rodar os scripts pela interface gráfica._
