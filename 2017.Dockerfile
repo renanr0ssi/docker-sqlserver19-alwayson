@@ -1,16 +1,20 @@
 #Baixar imagem de SQL Server 2019 com Ubuntu 18.04:
 FROM mcr.microsoft.com/mssql/server:2017-CU19-ubuntu-16.04
 
-# Atualiza a imagem com os pacotes
-RUN apt-mark hold msodbcsql17
-RUN apt-get update && apt-get upgrade -y
-RUN apt-get install iputils-ping -y
-RUN apt-get install nano -y
+#Expor as portas necessárias:
+EXPOSE 1433
+EXPOSE 5022
 
 #Aceite dos termos do SQL Server, seta senha do user SA e utiliza a licença de Dev:
 ENV ACCEPT_EULA=Y
 ENV SA_PASSWORD="PaSSw0rd"
 ENV MSSQL_PID=Developer
+
+# Atualiza a imagem com os pacotes
+RUN apt-mark hold msodbcsql17
+RUN apt-get update && apt-get upgrade -y
+RUN apt-get install iputils-ping -y
+RUN apt-get install nano -y
 
 #informa o Mantenedor dessa imagem que criaremos (Você pode colocar seu prórpio nome):
 LABEL MAINTAINER="Renan Rossi"
@@ -24,9 +28,8 @@ WORKDIR /usr/
 COPY ${CERTFILE} ./certificate
 COPY ${CERTFILE_PWD} ./certificate
 
-#Expor as portas necessárias:
-EXPOSE 1433
-EXPOSE 5022
+#Instala Pacemaker:
+RUN apt-get install pacemaker pcs fence-agents resource-agents -y
 
 #Habilita o Grupo de Disponibilidade
 RUN /opt/mssql/bin/mssql-conf set hadr.hadrenabled 1
