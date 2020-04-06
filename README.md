@@ -160,8 +160,17 @@ docker build -t docker-sqlserver2017-pacemaker -f 2017.Dockerfile .
 docker run -p 14333:1433 -it docker-sqlserver2017-pacemaker
 ```
 
-4. Conectar na instancia desse banco que acabamos de subir e executar o script abaixo para que seja criado o login de acesso utilizando o certificado recém-criado:
+4. Conectar na instancia desse banco que acabamos de subir e executar os 2 scripts abaixo para que seja:
+* habilitada a sessão de eventos 
+* criado o login de acesso utilizando o certificado recém-criado
+* criado os endpoints de comunicação
+
 _OBS: pode-se conectar utilizando o Visual Studio Code (pegar o IP do container utilizando o comando Docker Inspect ID_DO_CONTAINER) ou atraves do comando: (*docker exec -it sqlnode1 "bash"*) e dentro dele rodar o (/opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P PaSSw0rd)_
+
+```sql
+ALTER EVENT SESSION  AlwaysOn_health ON SERVER WITH (STARTUP_STATE=ON);
+GO
+```
 
 ```sql
 CREATE LOGIN dbm_login WITH PASSWORD = 'Pa$$w0rd';
