@@ -1,9 +1,9 @@
-# Docker SQL Server 2017 Alwayson
+# Criando Containers SQL Server 2017 AlwaysOn e PaceMaker
 
 Templates de Docker para criar um grupo de Alta DIsponibilidade (HA) com 03 nós de SQL Server 2019.
 
 
-## Como criar uma topologia de AlwaysOn com 03 nós usando Docker:
+## Criar uma topologia de AlwaysOn com 03 nós usando Docker (Parte 01):
 
 Estes laboratório foi criada em cima de um servidor Linux Ubuntu 18.04 rodando Docker 19.03, portanto partirei do presuporto que seu ambiente estará com esta confguração ou similar compativel. 
 
@@ -90,6 +90,62 @@ GO
 SELECT DB_NAME(database_id) AS 'database', synchronization_state_desc FROM sys.dm_hadr_database_replica_states;
 ```
 
+## Configurar o cluster do Ubuntu e o recurso do grupo de disponibilidade (Parte 02):
+
+01. Apagar quaisquer outras configurações de cluster que existir e restartar os serviços do PCSD e PaceMaker:
+```cmd
+pcs cluster destroy
+systemctl enable pcsd
+systemctl enable pacemaker
+/etc/init.d/pacemaker start
+/etc/init.d/pcsd start
+```
+
+02. Criar cluster:
+```cmd
+pcs cluster auth sqlnode1 sqlnode2 sqlnode3 -u hacluster -p PaSSw0rd
+pcs cluster setup --name cluster-sql sqlnode1 sqlnode2 sqlnode3
+pcs cluster start --all
+pcs cluster enable --all
+```
+
+03. Desabilitar o Stonith:
+```cmd
+pcs property set stonith-enabled=false
+```
+
+04. Atualizar o valor da propriedade de cluster-recheck-interval para 2 minutes:
+```cmd
+pcs property set cluster-recheck-interval=2min
+```
+
+05. Atualizar o valor da propriedade de start-failure-is-fatal para 2 minutes:
+```cmd
+pcs property set start-failure-is-fatal=true
+```
+
+06. Atualizar o valor da propriedade de failure-timeout para 60 segundos (deu erro de AG não encontrado):
+```cmd
+pcs resource update ag1 meta failure-timeout=60s
+```
+
+07. Criar recurso do grupo de disponibilidade (deu erro de AG não encontrado):
+```cmd
+sudo pcs resource create ag_cluster ocf:mssql:ag ag_name=ag1 meta failure-timeout=30s --master meta notify=true
+```
+
+
+_____________________________________________________________________________________________________________________
+
+## Inserindo dados na tebale de teste para validar replicação de dados:
+```sql
+USE BaseTeste01
+CREATE TABLE Inventory (id INT, name NVARCHAR(50), quantity INT)
+INSERT INTO Inventory VALUES (1, 'banana', 150); INSERT INTO Inventory VALUES (2, 'orange', 154);
+```
+```sql
+SELECT * FROM Inventory WHERE quantity > 152;
+```
 _____________________________________________________________________________________________________________________
 
 ## Adicionar nós extras no grupo de disponibilidade:
