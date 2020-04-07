@@ -124,14 +124,14 @@ pcs property set cluster-recheck-interval=2min
 pcs property set start-failure-is-fatal=true
 ```
 
-06. Atualizar o valor da propriedade de failure-timeout para 60 segundos (deu erro de AG não encontrado):
+06. Atualizar o valor da propriedade de failure-timeout para 60 segundos:
 ```cmd
-pcs resource update ag1 meta failure-timeout=60s
+pcs resource update ag_cluster-master meta failure-timeout=60s
 ```
 
-07. Criar recurso do grupo de disponibilidade (deu erro de AG não encontrado):
+07. Cria recurso do grupo de disponibilidade (APENAS DOCUMENTANDO, NÃO PRECISA EXECUTAR):
 ```cmd
-sudo pcs resource create ag_cluster ocf:mssql:ag ag_name=ag1 meta failure-timeout=30s --master meta notify=true
+pcs resource create ag_cluster ocf:mssql:ag ag_name=ag_clsuter-master meta failure-timeout=30s --master meta notify=true
 ```
 
 
